@@ -6,7 +6,7 @@ A parameterized **output-stationary systolic array** in SystemVerilog, with coco
 
 *4×4 array · 50% target input zeros · cycles 0–10. Animated preview captured from the standalone **RTL-observed** viewer; playback timing is illustrative.*
 
-**Interactive Demo:** [Open the standalone viewer](docs/index.html) locally, or [publish it with GitHub Pages](#publishing-the-demo).
+**Interactive Demo:** Launch TileFlow
 
 ## Design
 
