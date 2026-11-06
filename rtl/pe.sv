@@ -1,5 +1,4 @@
-// SPDX-License-Identifier: MIT
-// Signed output-stationary processing element. All transfers advance one hop/clock.
+// Signed output-stationary processing element.
 module pe #(
     parameter int W = 8,
     parameter int ACC_W = 32,
