@@ -1,7 +1,4 @@
-// SPDX-License-Identifier: MIT
 // N x N output-stationary systolic array for signed integer GEMM.
-// Boundary operands MUST be skewed by their row/column index (see docs/design.md).
-// No embedded memory, DMA, or start/done controller in this baseline.
 module systolic_array #(
     parameter int N = 4,
     parameter int W = 8,
