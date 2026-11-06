@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TileFlow | Systolic Array Trace Viewer</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="shell">
+    <header>
+      <div>
+        <div class="kicker">TileFlow / RTL trace viewer</div>
+        <h1>Inside the Systolic Array</h1>
+        <p>Clock-by-clock operand flow and accumulation in an output-stationary array.</p>
+      </div>
+      <div class="stamp" id="sourceStamp">REFERENCE-MODEL TRACE · NOT RTL MEASURED</div>
+    </header>
+
+    <div class="controls">
+      <label for="size">Array size</label>
+      <select id="size" aria-label="Select array dimensions"></select>
+      <label for="workload">Workload</label>
+      <select id="workload" aria-label="Select matrix workload">
+        <option value="dense">Dense</option>
+        <option value="sparse">Sparse (conventional)</option>
+        <option value="gated">Sparse + zero-gated</option>
+      </select>
+      <span id="densityControl" class="density-control" hidden>
+        <label for="density">Target zeros</label>
+        <select id="density" aria-label="Target percentage of zero inputs">
+          <option value="25">25%</option>
+          <option value="50" selected>50%</option>
+          <option value="75">75%</option>
+        </select>
+      </span>
+      <button id="prev" aria-label="Previous clock">◀ Step</button>
+      <button id="toggle" class="primary">▶ Play</button>
+      <button id="next" aria-label="Next clock">Step ▶</button>
+      <button id="reset">↺ Reset</button>
+      <label for="speed">Speed</label>
+      <select id="speed">
+        <option value="1100">0.5×</option>
+        <option value="620" selected>1×</option>
+        <option value="320">2×</option>
+        <option value="150">4×</option>
+      </select>
+      <input id="scrub" class="range" type="range" min="0" value="0" aria-label="Cycle scrubber">
+      <div class="count" id="clock">Cycle 0 / 10</div>
+    </div>
+
+    <div class="main">
+      <section class="panel">
+        <h2>Output-stationary processing elements</h2>
+        <div class="legend">
+          <span><i class="sw a"></i>A flows →</span>
+          <span><i class="sw b"></i>B flows ↓</span>
+          <span><i class="sw active"></i>MAC active</span>
+          <span><i class="sw zero"></i>Zero-product MAC scheduled</span>
+          <span><i class="sw gated"></i>Multiplier isolated</span>
+        </div>
+        <div class="array-scroll">
+          <div id="array" class="array-wrap"></div>
+        </div>
+      </section>
+
+      <aside class="panel">
+        <h2>Live execution</h2>
+        <div class="stats">
+          <div class="stat"><div class="num" id="active">0</div><div class="lbl">Active MACs / cycle</div></div>
+          <div class="stat"><div class="num" id="cumulative">0</div><div class="lbl">MACs so far</div></div>
+          <div class="stat"><div class="num" id="util">0%</div><div class="lbl">Instant utilization</div></div>
+          <div class="stat"><div class="num" id="overall">0%</div><div class="lbl">Completed-cycle utilization</div></div>
+        </div>
+
+        <h2>Accumulated outputs C</h2>
+        <div id="output"></div>
+        <p id="status">Partial sums are not final values until all scheduled cycles finish.</p>
+
+        <hr class="section-divider">
+        <h2>Dense · sparse · gated <span class="comparison-progress" id="comparisonCycle">through cycle 0</span></h2>
+        <div class="comparison-scroll">
+          <div id="comparison" aria-live="off" aria-label="Cumulative hardware-mode comparison through selected cycle"></div>
+        </div>
+        <p class="comparison-note">Multiplier-input bit transitions are sampled at successive compute edges. They are not energy or power measurements.</p>
+
+        <hr class="section-divider">
+        <h2>Input matrices</h2>
+        <div class="matrix-group">
+          <div>
+            <p class="matrix-label-a">Matrix A</p>
+            <div id="matrixA"></div>
+          </div>
+          <div>
+            <p class="matrix-label-b">Matrix B</p>
+            <div id="matrixB"></div>
+          </div>
+        </div>
+        <p class="matrix-help">Highlighted entries are used by active MACs at the selected cycle.</p>
+
+      </aside>
+    </div>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
