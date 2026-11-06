@@ -1,0 +1,45 @@
+name: Verify
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  model-and-rtl:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install Verilator and Python requirements
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y verilator
+          python -m pip install -r requirements.txt
+          verilator --version
+          python -m pip show cocotb
+      - name: Test reference model
+        run: python -m unittest discover -s tests -p 'test_model.py' -v
+      - name: Test evaluation checks
+        run: python -m unittest discover -s tests -p 'test_evaluation.py' -v
+      - name: Check viewer JavaScript
+        run: node --check viewer/app.js
+      - name: Verify conventional and zero-gated RTL
+        run: python tools/run_rtl.py --sizes 2 3 4 8
+      - name: Validate paired RTL traces and switching results
+        run: python tools/compare_switching.py --sizes 2 3 4 8
+      - name: Verify recorded switching snapshot
+        run: diff -u results/switching_comparison.csv build/reports/switching_comparison.csv
+      - name: Rebuild RTL-observed demonstration
+        run: python tools/build_demo.py --rtl --publish
+      - name: Verify committed demonstration is reproducible
+        run: git diff --exit-code -- docs/index.html
+      - name: Upload RTL verification artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: tileflow-rtl-demo
+          path: |
+            artifacts/rtl_trace_n*.json
+            artifacts/rtl_demo.html
+            build/reports/switching_comparison.csv
