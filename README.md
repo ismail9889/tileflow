@@ -67,16 +67,7 @@ Reports are generated in `build/reports/`. The versioned CSV snapshots are in [`
 
 **Verification:** The recorded local regression passed eight cocotb configurations (four sizes × two RTL variants), six Python model tests, and four analysis tests. The trace-pair analyzer validated 12 matched sparse/gated cases, including identical inputs, MAC schedules, outputs and isolation markers. [GitHub Actions](.github/workflows/verify.yml) reruns the model and RTL checks and checks the published demo and switching snapshot; its status must be verified after the first push.
 
-## Publishing the demo
-
-After pushing to GitHub, enable **Settings → Pages → Deploy from a branch**, selecting `main` and `/docs`. This serves the committed standalone `docs/index.html`; add that Pages URL to the repository description. To regenerate the published HTML from fresh RTL simulations, run:
-
-```bash
-python tools/build_demo.py --rtl --publish
-```
-
 ## Source layout
 
 `rtl/` — synthesizable SystemVerilog · `sim/` — Python reference model · `tests/` — cocotb and analysis tests · `tools/` — simulation and evaluation scripts · `viewer/` — editable HTML/CSS/JS · `results/` — measurement snapshots · `docs/` — standalone GitHub Pages viewer and animated preview.
 
-TileFlow is a focused **hardware engineering demonstration**, not a claim of a novel sparse accelerator. MIT licensed.
