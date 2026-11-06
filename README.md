@@ -6,7 +6,7 @@ A parameterized **output-stationary systolic array** in SystemVerilog, with coco
 
 *4×4 array · 50% target input zeros · cycles 0-10. Animated preview captured from the standalone **RTL-observed** viewer, playback timing is illustrative.*
 
-**Interactive Demo:** Launch TileFlow
+**Interactive Demo:** [Launch TileFlow](https://ismail9889.github.io/tileflow/)
 
 ## Design
 
@@ -65,7 +65,7 @@ python tools/measure_synth.py --sizes 2 3 4 8
 
 Reports are generated in `build/reports/`. The versioned CSV snapshots are in [`results/`](results/); generated simulator outputs are deliberately excluded from Git.
 
-**Verification:** The recorded local regression passed eight cocotb configurations (four sizes × two RTL variants), six Python model tests, and four analysis tests. The trace-pair analyzer validated 12 matched sparse/gated cases, including identical inputs, MAC schedules, outputs and isolation markers. [GitHub Actions](.github/workflows/verify.yml) reruns the model and RTL checks and checks the published demo and switching snapshot; its status must be verified after the first push.
+**Verification:** The recorded local regression passed eight cocotb configurations (four sizes × two RTL variants), six Python model tests, and four analysis tests. The trace-pair analyzer validated 12 matched sparse/gated cases, including identical inputs, MAC schedules, outputs and isolation markers. [GitHub Actions](.github/workflows/verify.yml) 
 
 ## Source layout
 
