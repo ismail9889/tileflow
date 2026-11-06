@@ -2,7 +2,7 @@
 
 A parameterized **output-stationary systolic array** in SystemVerilog, with cocotb verification, cycle-by-cycle RTL visualization, and an evaluated zero-gated datapath.
 
-![TileFlow 4×4 RTL-observed systolic array, looping from cycle 0 through cycle 10 in sparse zero-gated mode](docs/preview.gif)
+[![TileFlow RTL Demo](docs/preview.gif)](https://ismail9889.github.io/tileflow/)
 
 *4×4 array · 50% target input zeros · cycles 0–10. Animated preview captured from the standalone **RTL-observed** viewer; playback timing is illustrative.*
 
