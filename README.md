@@ -2,11 +2,11 @@
 
 A parameterized **output-stationary systolic array** in SystemVerilog, with cocotb verification, cycle-by-cycle RTL visualization, and an evaluated zero-gated datapath.
 
-![TileFlow 4×4 zero-gated array at cycle 7, with live utilization, partial sums and dense/sparse/gated comparison](docs/preview.png)
+![TileFlow 4×4 RTL-observed systolic array, looping from cycle 0 through cycle 10 in sparse zero-gated mode](docs/preview.gif)
 
-*4×4 array · 50% target input zeros · cycle 7 of 10. Screenshot captured from the standalone **RTL-observed** viewer.*
+*4×4 array · 50% target input zeros · cycles 0–10. Animated preview captured from the standalone **RTL-observed** viewer; playback timing is illustrative.*
 
-**Explore:** [Standalone HTML viewer](docs/index.html) (open locally after cloning, or [publish with GitHub Pages](#publishing-the-demo)) · [Design](docs/design.md) · [Evaluation and limitations](docs/evaluation.md)
+**Interactive Demo:** [Open the standalone viewer](docs/index.html) locally, or [publish it with GitHub Pages](#publishing-the-demo).
 
 ## Design
 
@@ -33,7 +33,13 @@ For **4×4**, using the *same sparse A and B matrices* with **50% target input z
 | Sampled multiplier-input bit transitions | 472 | 248 |
 | Yosys generic cells | 17,520 | 18,245 |
 
-The gated design produced **47.46% fewer sampled multiplier-input transitions**, with **4.14% more generic synthesis cells**. These are **not** measured power savings, physical area, or speedup. The generic-cell counts include debug observation logic and gating-pulse registers; the switching counts sample multiplier-input buses at compute edges rather than internal gate glitches. Workloads are small, deterministic demonstrations, not representative benchmarks. See [the complete methodology and all 12 comparisons](docs/evaluation.md).
+The gated design produced **47.46% fewer sampled multiplier-input transitions**, with **4.14% more generic synthesis cells**. These are **not** measured power savings, physical area, or speedup. The generic-cell counts include debug observation logic and gating-pulse registers; the switching counts sample multiplier-input buses at compute edges rather than internal gate glitches. Workloads are small, deterministic demonstrations, not representative benchmarks. Full results for the four array sizes and three target sparsity levels are provided as [synthesis CSV](results/generic_cells.csv) and [switching CSV](results/switching_comparison.csv).
+
+## Measurement method
+
+Each 2×2, 3×3, 4×4, and 8×8 configuration is independently simulated with `ZERO_GATE=0` and `ZERO_GATE=1`. The switching comparison uses the same deterministic sparse matrix pair at each target zero level (25%, 50%, 75%); actual zero density can differ slightly for small matrices. The analyzer checks matched operands, output values, partial sums, MAC schedules, and gating markers across all 12 sparse/gated comparisons.
+
+For each PE, the switching proxy counts bit differences between successive sampled multiplier-input buses just before compute edges (initial samples compared with zero). These counts exclude internal multiplier glitches, clock activity, and all other nodes. Synthesis uses the same Yosys flow for both configurations (`synth -auto-top -flatten -noabc`, `W=8`, `ACC_W=32`), excludes `$scopeinfo` metadata, and includes instrumentation ports and gating-pulse registers. Neither measurement establishes physical area, power, energy, or clock-frequency improvements.
 
 ## Reproduce
 
@@ -71,6 +77,6 @@ python tools/build_demo.py --rtl --publish
 
 ## Source layout
 
-`rtl/` — synthesizable SystemVerilog · `sim/` — Python reference model · `tests/` — cocotb and analysis tests · `tools/` — simulation and evaluation scripts · `viewer/` — editable HTML/CSS/JS · `results/` — measurement snapshots · `docs/` — design notes, evaluation and standalone viewer.
+`rtl/` — synthesizable SystemVerilog · `sim/` — Python reference model · `tests/` — cocotb and analysis tests · `tools/` — simulation and evaluation scripts · `viewer/` — editable HTML/CSS/JS · `results/` — measurement snapshots · `docs/` — standalone GitHub Pages viewer and animated preview.
 
-TileFlow is a focused **hardware engineering demonstration**, not a claim of a novel sparse accelerator. [Scope and related work](docs/research-notes.md). MIT licensed.
+TileFlow is a focused **hardware engineering demonstration**, not a claim of a novel sparse accelerator. MIT licensed.
